@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 
 import {
-  createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
   signInWithGooglePopup,
   signInAuthUserWithEmailAndPassword,
@@ -9,7 +8,11 @@ import {
 
 import FormInput from '../form-input/form-input.component';
 import Button from '../button/button.component';
+
+import { UserContext } from '../../context/user.context';
+
 import './sign-in-form.styles.scss';
+import { set } from 'firebase/database';
 
 const defaultFormFields = {
   email: '',
@@ -18,7 +21,9 @@ const defaultFormFields = {
 
 const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const { displayName, email, password, confirmPassword } = formFields;
+  const { email, password } = formFields;
+
+  const { setCurrentUser } = useContext(UserContext);
 
   const signInWithGoogle = async () => {
     const { user } = await signInWithGooglePopup();
@@ -39,23 +44,21 @@ const SignInForm = () => {
 
     try {
       //LOGIC new logic here
-      const response = await signInAuthUserWithEmailAndPassword(
+      const { user } = await signInAuthUserWithEmailAndPassword(
         email,
         password
       );
-      console.log(response); // REMOVE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      setCurrentUser(user);
+
       resetFormFields();
     } catch (error) {
-      console.log('code: ', error.code); // REMOVE
-      console.log(error); // REMOVE
-
       switch (error.code) {
         case 'auth/invalid-credential':
           alert(
             'invalid credential, user does not exist or password incorrect'
           );
           break;
-        // LOGIC add more eedge cases errors
+        // LOGIC add more eedge cases for different errors
         default:
           console.log(error);
       }
@@ -86,7 +89,7 @@ const SignInForm = () => {
         />
         <div className="buttons-container">
           <Button type="submit">Sign In</Button>
-          <Button buttonType="google" onClick={signInWithGoogle}>
+          <Button type="button" buttonType="google" onClick={signInWithGoogle}>
             Google Sign In
           </Button>
         </div>
