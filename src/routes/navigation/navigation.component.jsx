@@ -9,7 +9,6 @@ import { ReactComponent as CrownLogo } from '../../assets/crown.svg';
 
 const Navigation = () => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
-  console.log('user from context: ', currentUser); // REMOVE
 
   const signOutHandler = async () => {
     await signOutUser();
