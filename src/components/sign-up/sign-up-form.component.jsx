@@ -1,9 +1,7 @@
 import { useState, useContext } from 'react';
 
-import {
-  createAuthUserWithEmailAndPassword,
-  createUserDocumentFromAuth,
-} from '../../utils/firebase/firebase.utils';
+import { createAuthUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils';
+import { createUserDocumentFromAuth } from '../../utils/firebase/createUserDocumentFromAuth';
 
 import { UserContext } from '../../contexts/user.context';
 
